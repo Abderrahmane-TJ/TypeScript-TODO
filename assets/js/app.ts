@@ -1,14 +1,14 @@
 /// <reference path="events.ts"/>
-var App = (function () {
-    function App() {
+class App {
+    constructor() {
         this.init();
     }
-    App.prototype.init = function () {
+    init() {
         var ev = new Events();
         var input = document.getElementsByClassName('text')[0];
         var output = document.getElementsByClassName('todo');
 
-        ev.register('associate', function () {
+        ev.register('associate', () => {
             ev.associate({
                 input: input,
                 input_property: 'value',
@@ -16,9 +16,7 @@ var App = (function () {
                 output_property: 'innerHTML'
             });
         });
-    };
-    return App;
-})();
+    }
+}
 
 var app = new App();
-//# sourceMappingURL=app.js.map
