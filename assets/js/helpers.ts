@@ -1,7 +1,12 @@
-var requestAnimFrame = (function () {
-    return window.requestAnimationFrame || (window).webkitRequestAnimationFrame || (window).mozRequestAnimationFrame || (window).oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) {
-        window.setTimeout(callback, 1000 / 60, new Date().getTime());
-    };
+var requestAnimFrame: (callback: () => void) => void = (function(){
+    return window.requestAnimationFrame ||
+        (<any>window).webkitRequestAnimationFrame ||
+        (<any>window).mozRequestAnimationFrame ||
+        (<any>window).oRequestAnimationFrame ||
+        window.msRequestAnimationFrame ||
+        function(callback){
+            window.setTimeout(callback, 1000 / 60, new Date().getTime());
+        };
 })();
 function isArray(a) {
     return Object.prototype.toString.call(a) === "[object Array]";
@@ -10,22 +15,22 @@ function isElement(obj) {
     return !!(obj && obj.nodeType === 1);
 }
 
+
 function indexInParent(node) {
     var children = node.parentNode.childNodes;
     var num = 0;
-    for (var i = 0; i < children.length; i++) {
-        if (children[i] == node)
-            return num;
-        if (children[i].nodeType == 1)
-            num++;
+    for (var i=0; i<children.length; i++) {
+        if (children[i]==node) return num;
+        if (children[i].nodeType==1) num++;
     }
     return -1;
 }
 
 /*
-*   make(["p", "Here is a ", ["a", { href:"http://www.google.com/" }, "link"], "."]);
-*/
-function make(desc) {
+ *   make(["p", "Here is a ", ["a", { href:"http://www.google.com/" }, "link"], "."]);
+ */
+
+function make(desc:any[]) {
     if (!isArray(desc)) {
         return make.call(this, Array.prototype.slice.call(arguments));
     }
@@ -35,7 +40,7 @@ function make(desc) {
     var start = 1;
     if (typeof attributes === "object" && attributes !== null && !isArray(attributes)) {
         for (var attr in attributes) {
-            el.setAttribute(attr, attributes[attr]);
+            el.setAttribute(attr,attributes[attr]);
         }
         start = 2;
     }
@@ -43,12 +48,11 @@ function make(desc) {
         var current = desc[i];
         if (isArray(current)) {
             el.appendChild(make(current));
-        } else if (isElement(current)) {
-            el.appendChild(current);
+        } else if(isElement(current)){
+            el.appendChild(current)
         } else {
             el.appendChild(document.createTextNode(current));
         }
     }
     return el;
 }
-//# sourceMappingURL=helpers.js.map

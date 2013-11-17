@@ -13,8 +13,36 @@ body{
   font-size: 26px;
   line-height: 30px;
 }
+.todo{
+  margin: 10px 0;
+  position: relative;
+  overflow: hidden;
 
-ul.todos-list{
+  &:hover{
+    background-color: lightgray;
+  }
+  & span{
+      padding: 0 59px 0 7px;
+  }
+}
+
+.settings{
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 16px;
+  height: 16px;
+}
+
+.cog{
+  margin-right: 32px;
+  background: url('../img/cog.png');
+}
+.bin{
+  background: url('../img/remove.png');
+}
+
+.todos{
   list-style-type: none;
   padding: 0;
 }
