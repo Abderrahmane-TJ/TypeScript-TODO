@@ -7,7 +7,7 @@ body{
 .container{
   margin: 20px 0 0 0;
 }
-.text,.todo{
+.main-input,.input,.todo{
   width: 100%;
   height: 30px;
   font-size: 26px;
@@ -16,16 +16,17 @@ body{
 .todo{
   margin: 10px 0;
   position: relative;
-  overflow: hidden;
 
   &:hover{
     background-color: lightgray;
   }
-  & span{
-      padding: 0 59px 0 7px;
-  }
 }
-
+.text{
+  padding: 0 0 0 7px;
+  width: 531px;
+  display: inline-block;
+  overflow: hidden;
+}
 .settings{
   position: absolute;
   top: 7px;
@@ -39,10 +40,17 @@ body{
   background: url('../img/cog.png');
 }
 .bin{
-  background: url('../img/remove.png');
+  background: url('../img/bin.png');
+}
+.checkmark{
+  background: url('../img/checkmark.png');
 }
 
 .todos{
   list-style-type: none;
   padding: 0;
+}
+
+.hidden{
+  display: none;
 }
