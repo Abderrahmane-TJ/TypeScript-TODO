@@ -1,4 +1,5 @@
 /// <reference path="app.ts"/>
+/// <reference path="helpers.ts"/>
 var Todo;
 (function (Todo) {
     var Events = (function () {
@@ -39,14 +40,12 @@ var Todo;
                             app.edit(index);
                         } else if (target.classList.contains(('confirm'))) {
                             app.log('confirm');
-                            var value = (target.parentElement.querySelector('.input')).value;
+                            var value = target.parentElement.querySelector('.input').value;
                             app.confirm(app.entries.length - 1 - index, value);
                         }
                     }
                     break;
             }
-        };
-        Events.prototype.onDelete = function () {
         };
         return Events;
     })();

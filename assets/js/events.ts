@@ -1,4 +1,5 @@
 /// <reference path="app.ts"/>
+/// <reference path="helpers.ts"/>
 
 module Todo {
     export class Events {
@@ -8,6 +9,7 @@ module Todo {
             this.app = app;
             this.codes = {
                 ENTER: 13
+
             };
         }
         handleEvent(e) {
@@ -48,9 +50,6 @@ module Todo {
                     }
                     break;
             }
-        }
-        onDelete(){
-
         }
     }
 }

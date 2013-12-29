@@ -35,9 +35,12 @@ body{
   height: 16px;
 }
 
-.cog{
+.pencil {
   margin-right: 32px;
-  background: url('../img/cog.png');
+  background: url('../img/pencil.png');
+  .edit-state{
+    margin-right: 0;
+  }
 }
 .bin{
   background: url('../img/bin.png');

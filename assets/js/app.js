@@ -23,9 +23,9 @@ var Todo;
             var li = this.output.querySelector('li:nth-child(' + (index + 1) + ')');
             var span = li.querySelector('.text');
             span.classList.add('hidden');
-            (li.querySelector('.edit')).classList.add('hidden');
-            (li.querySelector('.remove')).classList.add('hidden');
-            (li.querySelector('.confirm')).classList.remove('hidden');
+            li.querySelector('.edit').classList.add('hidden');
+            li.querySelector('.remove').classList.add('hidden');
+            li.querySelector('.confirm').classList.remove('hidden');
             var input = make(['input', { 'type': 'text', 'class': 'input inline-input', 'value': this.entries[this.entries.length - 1 - index] }]);
             input.addEventListener('keyup', this.events, false);
             li.insertBefore(input, span);
@@ -51,14 +51,13 @@ var Todo;
                 var confirm = make(['a', { 'class': 'settings checkmark confirm hidden', href: '#', title: 'Confirm modifications' }]);
                 confirm.addEventListener('click', this.events, false);
 
-                var edit = make(['a', { 'class': 'settings cog edit', href: '#', title: 'Edit this item' }]);
+                var edit = make(['a', { 'class': 'settings pencil edit', href: '#', title: 'Edit this item' }]);
                 edit.addEventListener('click', this.events, false);
 
                 var remove = make(['a', { 'class': 'settings bin remove ', href: '#', title: 'Delete this item' }]);
                 remove.addEventListener('click', this.events, false);
                 var li = make([
-                    'li',
-                    { 'class': 'todo' },
+                    'li', { 'class': 'todo' },
                     text,
                     confirm,
                     edit,

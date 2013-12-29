@@ -23,8 +23,8 @@ module Todo {
             this.input.value = '';
         }
         edit(index:number) {
-            var li = this.output.querySelector('li:nth-child('+(index+1)+')');
-            var span = <HTMLElement>li.querySelector('.text');
+            var li:HTMLElement = <HTMLElement>this.output.querySelector('li:nth-child('+(index+1)+')');
+            var span:HTMLElement = <HTMLElement>li.querySelector('.text');
             span.classList.add('hidden');
             (<HTMLElement>li.querySelector('.edit')).classList.add('hidden');
             (<HTMLElement>li.querySelector('.remove')).classList.add('hidden');
@@ -33,6 +33,7 @@ module Todo {
             input.addEventListener('keyup',this.events,false);
             li.insertBefore(input,span);
             input.focus();
+
         }
         confirm(index:number,value:string) {
             this.entries[index] = value;
@@ -54,7 +55,7 @@ module Todo {
                 var confirm = make(['a',{'class':'settings checkmark confirm hidden',href:'#', title: 'Confirm modifications'}]);
                 confirm.addEventListener('click',this.events,false);
 
-                var edit = make(['a',{'class':'settings cog edit',href:'#', title: 'Edit this item'}]);
+                var edit = make(['a',{'class':'settings pencil edit',href:'#', title: 'Edit this item'}]);
                 edit.addEventListener('click',this.events,false);
 
                 var remove = make(['a',{'class':'settings bin remove ', href: '#', title: 'Delete this item'}]);
