@@ -9,7 +9,6 @@ module Todo {
             this.app = app;
             this.codes = {
                 ENTER: 13
-
             };
         }
         handleEvent(e) {
