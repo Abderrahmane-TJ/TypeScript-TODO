@@ -52,6 +52,6 @@ function make(desc:any[]) {
             el.appendChild(document.createTextNode(current));
         }
     }
+
     return el;
 }
-

@@ -48,6 +48,7 @@ function make(desc) {
             el.appendChild(document.createTextNode(current));
         }
     }
+
     return el;
 }
 //# sourceMappingURL=helpers.js.map
