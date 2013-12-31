@@ -17,6 +17,7 @@ module Todo {
             e.preventDefault();
             switch (e.type) {
                 case 'dblclick':
+                    // if double click on a todo_item then bring up a text field
                     if(target.classList.contains('text')){
                         var index = indexInParent(target.parentNode);
                         app.edit(index);
@@ -24,20 +25,22 @@ module Todo {
                     break;
                 case 'keyup':
                     var input = app.input;
+                    // if ENTER is hit on the main input field, add a todo_item
                     if (target === input && e.keyCode === this.codes.ENTER) {
                         app.add(input.value);
                     } else if(target.classList.contains('inline-input')&& e.keyCode === this.codes.ENTER){
+                    // if ENTER is hit on an inline-input field, confirm modifications of said input
                         var index = indexInParent(target.parentNode);
                         app.confirm(app.entries.length-1-index,target.value);
                     }
                     break;
                 case 'click':
+                    // if MouseClick on one of the settings' links
                     if(target.classList.contains('settings')){
-
                         var index = indexInParent(target.parentNode);
                         if(target.classList.contains(('remove'))){
                             app.log('remove');
-                            app.delete(app.entries.length-1-index);
+                            app.remove(app.entries.length-1-index);
                         } else if(target.classList.contains(('edit'))){
                             app.log('edit');
                             app.edit(index);

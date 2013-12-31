@@ -14,7 +14,7 @@ function isArray(a) {
 function isElement(obj) {
     return !!(obj && obj.nodeType === 1);
 }
-function indexInParent(node) {
+function indexInParent(node:Node) {
     var children = node.parentNode.childNodes;
     var num = 0;
     for (var i=0; i<children.length; i++) {

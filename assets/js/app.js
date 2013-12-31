@@ -1,9 +1,13 @@
 /// <reference path="events.ts"/>
 /// <reference path="helpers.ts"/>
+/// <reference path="config.ts"/>
 var Todo;
 (function (Todo) {
     var App = (function () {
         function App(input, output) {
+            this.keyCodes = {
+                ENTER: 30
+            };
             this.entries = [];
             this.input = input;
             this.output = output;
@@ -26,7 +30,12 @@ var Todo;
             li.querySelector('.edit').classList.add('hidden');
             li.querySelector('.remove').classList.add('hidden');
             li.querySelector('.confirm').classList.remove('hidden');
-            var input = make(['input', { 'type': 'text', 'class': 'input inline-input', 'value': this.entries[this.entries.length - 1 - index] }]);
+            var input = make([
+                'input', {
+                    'type': 'text',
+                    'class': 'input inline-input',
+                    'value': this.entries[this.entries.length - 1 - index]
+                }]);
             input.addEventListener('keyup', this.events, false);
             li.insertBefore(input, span);
             input.focus();
@@ -37,7 +46,7 @@ var Todo;
             inline_input.parentNode.removeChild(inline_input);
             this.update();
         };
-        App.prototype.delete = function (index) {
+        App.prototype.remove = function (index) {
             this.entries.splice(index, 1);
             this.update();
         };
@@ -48,7 +57,12 @@ var Todo;
                 var text = make(['span', { 'class': 'text' }, this.entries[i]]);
                 text.addEventListener('dblclick', this.events, false);
 
-                var confirm = make(['a', { 'class': 'settings checkmark confirm hidden', href: '#', title: 'Confirm modifications' }]);
+                var confirm = make([
+                    'a', {
+                        'class': 'settings checkmark confirm hidden',
+                        href: '#',
+                        title: 'Confirm modifications'
+                    }]);
                 confirm.addEventListener('click', this.events, false);
 
                 var edit = make(['a', { 'class': 'settings pencil edit', href: '#', title: 'Edit this item' }]);
@@ -71,7 +85,7 @@ var Todo;
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
                 args[_i] = arguments[_i + 0];
             }
-            console.log.apply(console, args);
+            CAN_DEBUG && console.log.apply(console, args);
         };
         return App;
     })();

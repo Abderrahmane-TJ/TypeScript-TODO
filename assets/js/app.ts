@@ -1,12 +1,17 @@
 /// <reference path="events.ts"/>
 /// <reference path="helpers.ts"/>
+/// <reference path="config.ts"/>
 module Todo {
     export class App {
         entries:string[];
-        input;
-        output;
+        input:HTMLInputElement;
+        output:HTMLUListElement;
         events;
+        keyCodes;
         constructor(input,output) {
+            this.keyCodes = {
+                ENTER: 30
+            };
             this.entries = [];
             this.input = input;
             this.output = output;
@@ -29,7 +34,11 @@ module Todo {
             (<HTMLElement>li.querySelector('.edit')).classList.add('hidden');
             (<HTMLElement>li.querySelector('.remove')).classList.add('hidden');
             (<HTMLElement>li.querySelector('.confirm')).classList.remove('hidden');
-            var input = make(['input',{'type':'text','class':'input inline-input','value':this.entries[this.entries.length-1-index]}]);
+            var input = make(['input',{
+                'type':'text',
+                'class':'input inline-input',
+                'value':this.entries[this.entries.length-1-index]
+            }]);
             input.addEventListener('keyup',this.events,false);
             li.insertBefore(input,span);
             input.focus();
@@ -41,7 +50,7 @@ module Todo {
             inline_input.parentNode.removeChild(inline_input);
             this.update();
         }
-        delete(index:number) {
+        remove(index:number) {
             this.entries.splice(index,1);
             this.update();
         }
@@ -52,7 +61,11 @@ module Todo {
                 var text = make(['span',{'class':'text'},this.entries[i]]);
                 text.addEventListener('dblclick',this.events,false);
 
-                var confirm = make(['a',{'class':'settings checkmark confirm hidden',href:'#', title: 'Confirm modifications'}]);
+                var confirm = make(['a',{
+                    'class':'settings checkmark confirm hidden',
+                    href:'#',
+                    title:'Confirm modifications'
+                }]);
                 confirm.addEventListener('click',this.events,false);
 
                 var edit = make(['a',{'class':'settings pencil edit',href:'#', title: 'Edit this item'}]);
@@ -71,7 +84,7 @@ module Todo {
             }
         }
         log(...args) {
-            console.log.apply(console, args);
+            CAN_DEBUG && console.log.apply(console, args);
         }
     }
 }
