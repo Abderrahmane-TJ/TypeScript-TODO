@@ -20,10 +20,9 @@ function indexInParent(node) {
     }
     return -1;
 }
-
 /*
-*   make(["p", "Here is a ", ["a", { href:"http://www.google.com/" }, "link"], "."]);
-*/
+ *   make(["p", "Here is a ", ["a", { href:"http://www.google.com/" }, "link"], "."]);
+ */
 function make(desc) {
     if (!isArray(desc)) {
         return make.call(this, Array.prototype.slice.call(arguments));
@@ -42,13 +41,14 @@ function make(desc) {
         var current = desc[i];
         if (isArray(current)) {
             el.appendChild(make(current));
-        } else if (isElement(current)) {
+        }
+        else if (isElement(current)) {
             el.appendChild(current);
-        } else {
+        }
+        else {
             el.appendChild(document.createTextNode(current));
         }
     }
-
     return el;
 }
 //# sourceMappingURL=helpers.js.map

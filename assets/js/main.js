@@ -6,12 +6,6 @@ var Todo;
             var input = document.getElementById('input');
             var output = document.getElementById('output');
             var app = this.app = new Todo.App(input, output);
-            input.addEventListener('keyup', function (e) {
-                e.preventDefault();
-                var value = input.value;
-                app.add(value);
-            }, false);
-            input.focus();
         }
         return Main;
     })();

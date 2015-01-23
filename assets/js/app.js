@@ -4,12 +4,21 @@ var Todo;
 (function (Todo) {
     var App = (function () {
         function App(input, output) {
+            var _this = this;
             this.keyCodes = {
                 ENTER: 13
             };
             this.entries = [];
             this.input = input;
             this.output = output;
+            input.addEventListener('keyup', function (e) {
+                e.preventDefault();
+                if (e.keyCode == _this.keyCodes.ENTER) {
+                    var value = input.value;
+                    _this.add(value);
+                }
+            }, false);
+            input.focus();
         }
         App.prototype.add = function (entry) {
             entry = entry.trim();
@@ -18,7 +27,7 @@ var Todo;
             }
             this.entries.push(entry);
             this.log('added %s', entry);
-            this.update();
+            this.buildList();
             this.input.value = '';
         };
         App.prototype.edit = function (index) {
@@ -30,13 +39,11 @@ var Todo;
             li.querySelector('.edit').classList.add('hidden');
             li.querySelector('.remove').classList.add('hidden');
             li.querySelector('.confirm').classList.remove('hidden');
-
-            var inline_input = make([
-                'input', {
-                    'type': 'text',
-                    'class': 'input inline-input',
-                    'value': this.entries[index]
-                }]);
+            var inline_input = make(['input', {
+                'type': 'text',
+                'class': 'input inline-input',
+                'value': this.entries[index]
+            }]);
             inline_input.addEventListener('keyup', function (e) {
                 if (e.keyCode === _this.keyCodes.ENTER) {
                     var index = indexInParent(inline_input.parentNode);
@@ -50,19 +57,19 @@ var Todo;
             this.entries[index] = value;
             var inline_input = this.output.querySelector('.inline-input');
             inline_input.parentNode.removeChild(inline_input);
-            this.update();
+            this.buildList();
         };
         App.prototype.remove = function (index) {
             this.entries.splice(index, 1);
-            this.update();
+            this.buildList();
         };
-        App.prototype.update = function () {
+        App.prototype.buildList = function () {
             var _this = this;
-            var output = this.output;
+            var output = this.output, text, confirmButton, editButton, removeButton, li;
             output.innerHTML = '';
             for (var i = this.entries.length - 1; i > -1; i--) {
-                (function () {
-                    var text = make(['span', { 'class': 'text' }, _this.entries[i]]);
+                (function (text, confirmButton, editButton, removeButton, li) {
+                    text = make(['span', { 'class': 'text' }, _this.entries[i]]);
                     text.addEventListener('dblclick', function (e) {
                         e.preventDefault();
                         var indexInHTML = indexInParent(text.parentNode);
@@ -70,13 +77,11 @@ var Todo;
                         _this.log('editing %s', _this.entries[index]);
                         _this.edit(index);
                     }, false);
-
-                    var confirmButton = make([
-                        'a', {
-                            'class': 'settings checkmark confirm hidden',
-                            href: '#',
-                            title: 'Confirm modifications'
-                        }]);
+                    confirmButton = make(['a', {
+                        'class': 'settings checkmark confirm hidden',
+                        href: '#',
+                        title: 'Confirm modifications'
+                    }]);
                     confirmButton.addEventListener('click', function (e) {
                         e.preventDefault();
                         var index = _this.entries.length - 1 - indexInParent(confirmButton.parentNode);
@@ -84,8 +89,7 @@ var Todo;
                         _this.log('confirming %s', value);
                         _this.confirm(index, value);
                     }, false);
-
-                    var editButton = make(['a', { 'class': 'settings pencil edit', href: '#', title: 'Edit this item' }]);
+                    editButton = make(['a', { 'class': 'settings pencil edit', href: '#', title: 'Edit this item' }]);
                     editButton.addEventListener('click', function (e) {
                         e.preventDefault();
                         var indexInHTML = indexInParent(editButton.parentNode);
@@ -93,8 +97,7 @@ var Todo;
                         _this.log('editing %s', _this.entries[index]);
                         _this.edit(index);
                     }, false);
-
-                    var removeButton = make(['a', { 'class': 'settings bin remove ', href: '#', title: 'Delete this item' }]);
+                    removeButton = make(['a', { 'class': 'settings bin remove ', href: '#', title: 'Delete this item' }]);
                     removeButton.addEventListener('click', function (e) {
                         e.preventDefault();
                         var indexInHTML = indexInParent(removeButton.parentNode);
@@ -102,21 +105,22 @@ var Todo;
                         _this.log("removing %s", _this.entries[index]);
                         _this.remove(index);
                     }, false);
-                    var li = make([
-                        'li', { 'class': 'todo' },
+                    li = make([
+                        'li',
+                        { 'class': 'todo' },
                         text,
                         confirmButton,
                         editButton,
                         removeButton
                     ]);
                     output.appendChild(li);
-                })();
+                })(text, confirmButton, editButton, removeButton, li);
             }
         };
         App.prototype.log = function () {
             var args = [];
-            for (var _i = 0; _i < (arguments.length - 0); _i++) {
-                args[_i] = arguments[_i + 0];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i - 0] = arguments[_i];
             }
             CAN_DEBUG && console.log.apply(console, args);
         };

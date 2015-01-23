@@ -13,6 +13,15 @@ module Todo {
             this.entries = [];
             this.input = input;
             this.output = output;
+
+            input.addEventListener('keyup', (e:KeyboardEvent)=>{
+                e.preventDefault();
+                if(e.keyCode == this.keyCodes.ENTER){
+                    var value = input.value;
+                    this.add(value);
+                }
+            }, false);
+            input.focus();
         }
         add(entry:string) {
             entry = entry.trim();
@@ -21,7 +30,7 @@ module Todo {
             }
             this.entries.push(entry);
             this.log('added %s', entry);
-            this.update();
+            this.buildList();
             this.input.value = '';
         }
         edit(index:number) {
@@ -52,18 +61,19 @@ module Todo {
             this.entries[index] = value;
             var inline_input = <HTMLElement>this.output.querySelector('.inline-input');
             inline_input.parentNode.removeChild(inline_input);
-            this.update();
+            this.buildList();
         }
         remove(index:number) {
             this.entries.splice(index,1);
-            this.update();
+            this.buildList();
         }
-        update() {
-            var output = this.output;
+        buildList() {
+            var output = this.output,
+                text,confirmButton,editButton,removeButton,li;
             output.innerHTML = '';
             for(var i = this.entries.length-1; i > -1 ; i-- ){
-                (()=>{
-                var text = make(['span',{'class':'text'},this.entries[i]]);
+                ((text,confirmButton,editButton,removeButton,li)=>{
+                text = make(['span',{'class':'text'},this.entries[i]]);
                 text.addEventListener('dblclick',(e:MouseEvent)=>{
                     e.preventDefault();
                     var indexInHTML = indexInParent(text.parentNode);
@@ -72,7 +82,7 @@ module Todo {
                     this.edit(index);
                 },false);
 
-                var confirmButton = make(['a',{
+                confirmButton = make(['a',{
                     'class':'settings checkmark confirm hidden',
                     href:'#',
                     title:'Confirm modifications'
@@ -85,7 +95,7 @@ module Todo {
                     this.confirm(index,value);
                 },false);
 
-                var editButton = make(['a',{'class':'settings pencil edit',href:'#', title: 'Edit this item'}]);
+                editButton = make(['a',{'class':'settings pencil edit',href:'#', title: 'Edit this item'}]);
                 editButton.addEventListener('click',(e:MouseEvent)=>{
                     e.preventDefault();
                     var indexInHTML = indexInParent(editButton.parentNode);
@@ -94,7 +104,7 @@ module Todo {
                     this.edit(index);
                 },false);
 
-                var removeButton = make(['a',{'class':'settings bin remove ', href: '#', title: 'Delete this item'}]);
+                removeButton = make(['a',{'class':'settings bin remove ', href: '#', title: 'Delete this item'}]);
                 removeButton.addEventListener('click',(e:MouseEvent)=>{
                     e.preventDefault();
                     var indexInHTML = indexInParent(removeButton.parentNode);
@@ -102,7 +112,7 @@ module Todo {
                     this.log("removing %s",this.entries[index]);
                     this.remove(index);
                 },false);
-                var li = make([
+                li = make([
                     'li',{'class':'todo'},
                     text,
                     confirmButton,
@@ -110,7 +120,7 @@ module Todo {
                     removeButton
                 ]);
                 output.appendChild(li);
-                })();
+                })(text,confirmButton,editButton,removeButton,li);
             }
         }
         log(...args) {
