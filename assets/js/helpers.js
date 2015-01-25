@@ -51,4 +51,10 @@ function make(desc) {
     }
     return el;
 }
+var TodoStatus;
+(function (TodoStatus) {
+    TodoStatus[TodoStatus["TODO"] = 0] = "TODO";
+    TodoStatus[TodoStatus["DONE"] = 1] = "DONE";
+    TodoStatus[TodoStatus["DELETED"] = 2] = "DELETED";
+})(TodoStatus || (TodoStatus = {}));
 //# sourceMappingURL=helpers.js.map

@@ -366,14 +366,20 @@ body {
 .settings {
   position: absolute;
   top: 7px;
-  right: 7px;
+  right: 7px; }
+
+.todo-button {
   width: 16px;
-  height: 16px; }
+  height: 16px;
+  display: inline-block;
+  float: left;
+  margin-left: 10px; }
 
 .pencil {
-  margin-right: 32px;
   background: url("../img/pencil.png"); }
   .pencil .edit-state {
+    margin-right: 0; }
+  .pencil.confirm {
     margin-right: 0; }
 
 .bin {
