@@ -14,6 +14,7 @@ module Todos {
             this.keyCodes = {
                 ENTER: 13
             };
+            //TODO: I need to reload from localstorage, and update to it on every action
             this.entries = [];
             this.input = input;
             this.output = output;
@@ -41,7 +42,6 @@ module Todos {
             this.input.value = '';
         }
         edit(id:number) {
-            // TODO: add a find function
             var li = <HTMLElement>this.output.querySelector('#todo-'+id);
             var inline_input = <HTMLInputElement>li.querySelector('.inline-input');
             inline_input.classList.remove('hidden');
