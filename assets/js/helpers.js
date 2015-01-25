@@ -3,9 +3,10 @@ var requestAnimFrame = (function () {
         window.setTimeout(callback, 1000 / 60, new Date().getTime());
     };
 })();
-var stringConstructor = "test".constructor;
+/*var stringConstructor = "test".constructor;
 var arrayConstructor = [].constructor;
 var objectConstructor = {}.constructor;
+
 function whatIsIt(object) {
     if (object === null) {
         return "null";
@@ -22,30 +23,27 @@ function whatIsIt(object) {
     else if (object.constructor === objectConstructor) {
         return "Object";
     }
-    else if (typeof object) {
+    else if(typeof object) {
         return (typeof object);
+    }else{
+        return "???"
     }
-    else {
-        return "???";
-    }
-}
+}*/
 function isArray(a) {
     return Object.prototype.toString.call(a) === "[object Array]";
 }
 function isElement(obj) {
     return !!(obj && obj.nodeType === 1);
 }
-function indexInParent(node) {
+/*function indexInParent(node:Node){
     var children = node.parentNode.childNodes;
     var num = 0;
-    for (var i = 0; i < children.length; i++) {
-        if (children[i] == node)
-            return num;
-        if (children[i].nodeType == 1)
-            num++;
+    for(var i = 0; i < children.length; i++){
+        if(children[i] == node) return num;
+        if(children[i].nodeType == 1) num++;
     }
     return -1;
-}
+}*/
 /*
  *   make(["p", "Here is a ", ["a", { href:"http://www.google.com/" }, "link"], "."]);
  */
