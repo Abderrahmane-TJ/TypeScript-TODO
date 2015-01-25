@@ -10,10 +10,10 @@ var Todos;
             this.keyCodes = {
                 ENTER: 13
             };
-            //TODO: I need to reload from localstorage, and update to it on every action
             this.entries = [];
             this.input = input;
             this.output = output;
+            this.loadFromLocalStorage();
             input.addEventListener('keyup', function (e) {
                 e.preventDefault();
                 if (e.keyCode == _this.keyCodes.ENTER) {
@@ -31,6 +31,7 @@ var Todos;
             var todo = new Todos.Todo(this.todoID, text, 0 /* TODO */);
             this.todoID += 1;
             this.entries.push(todo);
+            this.save();
             this.log('added %s (%d)', text, todo.ID);
             var todoHTMLElement = this.buildHTMLTodo(todo);
             this.output.insertBefore(todoHTMLElement, this.output.firstChild);
@@ -49,6 +50,7 @@ var Todos;
         };
         App.prototype.confirm = function (id, value) {
             this.findEntryByID(id).text = value;
+            this.save();
             var li = this.output.querySelector('#todo-' + id);
             var text = li.querySelector('.text');
             text.innerText = value;
@@ -59,7 +61,8 @@ var Todos;
             text.classList.remove('hidden');
         };
         App.prototype.remove = function (id) {
-            this.entries[id].status = 2 /* DELETED */;
+            this.findEntryByID(id).status = 2 /* DELETED */;
+            this.save();
             var li = this.output.querySelector("#todo-" + id);
             li.parentNode.removeChild(li);
         };
@@ -127,6 +130,32 @@ var Todos;
                 }
             }
             return null;
+        };
+        App.prototype.loadFromLocalStorage = function () {
+            var _this = this;
+            var localStorageEntries = localStorage['entries'];
+            if (!localStorageEntries) {
+                this.save();
+                return;
+            }
+            var entries = JSON.parse(localStorageEntries);
+            if (!isArray(entries) || entries.length === 0) {
+                return;
+            }
+            var ul = document.createDocumentFragment();
+            this.entries = entries.map(function (entry) {
+                var todo = new Todos.Todo(entry.ID, entry.text, entry.status);
+                if (entry.status !== 2 /* DELETED */) {
+                    var li = _this.buildHTMLTodo(todo);
+                    ul.insertBefore(li, ul.firstChild);
+                }
+                return todo;
+            });
+            this.todoID = entries[entries.length - 1].ID + 1;
+            this.output.appendChild(ul);
+        };
+        App.prototype.save = function () {
+            localStorage['entries'] = JSON.stringify(this.entries);
         };
         App.prototype.log = function () {
             var args = [];

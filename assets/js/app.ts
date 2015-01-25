@@ -14,10 +14,11 @@ module Todos {
             this.keyCodes = {
                 ENTER: 13
             };
-            //TODO: I need to reload from localstorage, and update to it on every action
             this.entries = [];
             this.input = input;
             this.output = output;
+
+            this.loadFromLocalStorage();
 
             input.addEventListener('keyup', (e:KeyboardEvent)=>{
                 e.preventDefault();
@@ -36,6 +37,7 @@ module Todos {
             var todo = new Todos.Todo(this.todoID,text,TodoStatus.TODO);
             this.todoID += 1;
             this.entries.push(todo);
+            this.save();
             this.log('added %s (%d)', text, todo.ID);
             var todoHTMLElement = this.buildHTMLTodo(todo);
             this.output.insertBefore(todoHTMLElement,this.output.firstChild);
@@ -54,6 +56,7 @@ module Todos {
         }
         confirm(id:number,value:string) {
             this.findEntryByID(id).text=value;
+            this.save();
             var li = <HTMLElement>this.output.querySelector('#todo-'+id);
             var text = <HTMLElement>li.querySelector('.text');
             text.innerText = value;
@@ -64,7 +67,8 @@ module Todos {
             text.classList.remove('hidden');
         }
         remove(id:number) {
-            this.entries[id].status = TodoStatus.DELETED;
+            this.findEntryByID(id).status = TodoStatus.DELETED;
+            this.save();
             var li = this.output.querySelector("#todo-"+id);
             li.parentNode.removeChild(li);
         }
@@ -142,6 +146,31 @@ module Todos {
                 }
             }
             return null;
+        }
+        loadFromLocalStorage(){
+            var localStorageEntries = localStorage['entries'];
+            if(!localStorageEntries){
+                this.save();
+                return;
+            }
+            var entries = JSON.parse(localStorageEntries);
+            if(!isArray(entries) || entries.length === 0){
+                return;
+            }
+            var ul = document.createDocumentFragment();
+            this.entries = entries.map((entry)=>{
+                var todo = new Todo(entry.ID,entry.text,entry.status);
+                if(entry.status !== TodoStatus.DELETED){
+                    var li = this.buildHTMLTodo(todo);
+                    ul.insertBefore(li,ul.firstChild);
+                }
+                return todo;
+            });
+            this.todoID = entries[entries.length-1].ID + 1;
+            this.output.appendChild(ul);
+        }
+        save(){
+            localStorage['entries'] = JSON.stringify(this.entries);
         }
         log(...args) {
             CAN_DEBUG && console.log.apply(console, args);
