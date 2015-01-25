@@ -18,7 +18,16 @@ body{
   position: relative;
 
   &:hover{
-    background-color: lightgray;
+    background-color: #E8E8E8;
+    .settings{
+      display: block;
+    }
+  }
+  &.done{
+    .text{
+      text-decoration: line-through;
+      opacity: .4;
+    }
   }
 }
 .text{
@@ -31,6 +40,7 @@ body{
   position: absolute;
   top: 7px;
   right: 7px;
+  display: none;
 }
 .todo-button{
   width: 16px;
@@ -44,7 +54,7 @@ body{
   .edit-state{
     margin-right: 0;
   }
-  &.confirm{
+  &.doEdit {
     margin-right: 0;
   }
 }

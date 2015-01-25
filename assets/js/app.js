@@ -37,88 +37,107 @@ var Todos;
             this.output.insertBefore(todoHTMLElement, this.output.firstChild);
             this.input.value = '';
         };
-        App.prototype.edit = function (id) {
-            var li = this.output.querySelector('#todo-' + id);
+        App.prototype.edit = function (id, li) {
+            var li = li || this.output.querySelector('#todo-' + id);
             var inline_input = li.querySelector('.inline-input');
             inline_input.classList.remove('hidden');
-            li.querySelector('.confirm').classList.remove('hidden');
+            li.querySelector('.doEdit').classList.remove('hidden');
             li.querySelector('.edit').classList.add('hidden');
             li.querySelector('.text').classList.add('hidden');
             li.querySelector('.remove').classList.add('hidden');
+            li.querySelector('.confirm').classList.add('hidden');
             inline_input.value = this.findEntryByID(id).text;
             inline_input.focus();
         };
-        App.prototype.confirm = function (id, value) {
+        App.prototype.confirm = function (id, li) {
+            var li = li || this.output.querySelector('#todo-' + id);
+            var entry = this.findEntryByID(id);
+            var confirming = entry.status === 0 /* TODO */;
+            if (confirming) {
+                entry.status = 1 /* DONE */;
+                li.classList.add('done');
+            }
+            else {
+                entry.status = 0 /* TODO */;
+                li.classList.remove('done');
+            }
+            this.save();
+        };
+        App.prototype.doEdit = function (id, value, li) {
             this.findEntryByID(id).text = value;
             this.save();
-            var li = this.output.querySelector('#todo-' + id);
+            var li = li || this.output.querySelector('#todo-' + id);
             var text = li.querySelector('.text');
             text.innerText = value;
             li.querySelector('.inline-input').classList.add('hidden');
-            li.querySelector('.confirm').classList.add('hidden');
+            li.querySelector('.doEdit').classList.add('hidden');
             li.querySelector('.edit').classList.remove('hidden');
             li.querySelector('.remove').classList.remove('hidden');
+            li.querySelector('.confirm').classList.remove('hidden');
             text.classList.remove('hidden');
         };
-        App.prototype.remove = function (id) {
+        App.prototype.remove = function (id, li) {
             this.findEntryByID(id).status = 2 /* DELETED */;
             this.save();
-            var li = this.output.querySelector("#todo-" + id);
+            var li = li || this.output.querySelector('#todo-' + id);
             li.parentNode.removeChild(li);
         };
         App.prototype.buildHTMLTodo = function (todo) {
             var _this = this;
-            var text, confirmButton, editButton, removeButton, li, inline_input;
+            var text, doEditButton, editButton, removeButton, li, confirmButton, inline_input;
             inline_input = make(['input', {
                 'type': 'text',
                 'class': 'input inline-input hidden',
                 'value': todo.text
             }]);
-            inline_input.addEventListener('keyup', function (e) {
-                if (e.keyCode === _this.keyCodes.ENTER) {
-                    var id = parseInt(inline_input.parentElement.id.replace('todo-', ''));
-                    _this.confirm(id, inline_input.value);
-                }
-            }, false);
             text = make(['span', { 'class': 'text' }, todo.text]);
-            text.addEventListener('dblclick', function (e) {
-                e.preventDefault();
-                var id = parseInt(text.parentElement.id.replace('todo-', ''));
-                _this.log('editing todo with ID %d', id);
-                _this.edit(id);
-            }, false);
+            confirmButton = make(['a', { 'class': 'todo-button checkmark confirm', href: '#', title: 'Confirm this item' }]);
             editButton = make(['a', { 'class': 'todo-button pencil edit', href: '#', title: 'Edit this item' }]);
-            editButton.addEventListener('click', function (e) {
-                e.preventDefault();
-                var id = parseInt(editButton.parentElement.parentElement.id.replace('todo-', ''));
-                _this.log('editing todo with ID %d', id);
-                _this.edit(id);
-            }, false);
             removeButton = make(['a', { 'class': 'todo-button bin remove ', href: '#', title: 'Delete this item' }]);
-            removeButton.addEventListener('click', function (e) {
-                e.preventDefault();
-                var id = parseInt(removeButton.parentElement.parentElement.id.replace('todo-', ''));
-                _this.log('removing todo with ID %d', id);
-                _this.remove(id);
-            }, false);
-            confirmButton = make(['a', { 'class': 'todo-button pencil confirm hidden', href: '#', title: 'Confirm modifications' }]);
-            confirmButton.addEventListener('click', function (e) {
-                e.preventDefault();
-                var id = parseInt(confirmButton.parentElement.parentElement.id.replace('todo-', ''));
-                var value = confirmButton.parentElement.parentElement.querySelector('.input').value;
-                _this.log('confirming %s', value);
-                _this.confirm(id, value);
-            }, false);
+            doEditButton = make(['a', { 'class': 'todo-button pencil doEdit hidden', href: '#', title: 'Confirm modifications' }]);
+            var li_class = 'todo';
+            if (todo.status === 1 /* DONE */) {
+                li_class += ' done';
+            }
             li = make([
                 'li',
-                {
-                    'class': 'todo',
-                    'id': 'todo-' + todo.ID
-                },
+                { 'class': li_class, 'id': 'todo-' + todo.ID },
                 inline_input,
                 text,
-                ['span', { 'class': 'settings' }, confirmButton, editButton, removeButton]
             ]);
+            inline_input.addEventListener('keyup', function (e) {
+                if (e.keyCode === _this.keyCodes.ENTER) {
+                    _this.doEdit(todo.ID, inline_input.value);
+                }
+            }, false);
+            text.addEventListener('dblclick', function (e) {
+                e.preventDefault();
+                _this.log('editing todo with ID %d', todo.ID);
+                _this.edit(todo.ID, li);
+            }, false);
+            confirmButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                _this.log('confirming todo with ID %d', todo.ID);
+                _this.confirm(todo.ID, li);
+            }, false);
+            editButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                _this.log('editing todo with ID %d', todo.ID);
+                _this.edit(todo.ID, li);
+            }, false);
+            removeButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                _this.log('removing todo with ID %d', todo.ID);
+                _this.remove(todo.ID, li);
+            }, false);
+            doEditButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                var value = li.querySelector('.input').value;
+                _this.log('confirming %s', value);
+                _this.doEdit(todo.ID, value, li);
+            }, false);
+            var buttons = make(['span', { 'class': 'settings' }, doEditButton, confirmButton, editButton, removeButton]);
+            li.appendChild(buttons);
             return li;
         };
         App.prototype.findEntryByID = function (ID) {

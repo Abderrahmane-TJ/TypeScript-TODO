@@ -355,7 +355,12 @@ body {
   margin: 10px 0;
   position: relative; }
   .todo:hover {
-    background-color: lightgray; }
+    background-color: #E8E8E8; }
+    .todo:hover .settings {
+      display: block; }
+  .todo.done .text {
+    text-decoration: line-through;
+    opacity: .4; }
 
 .text {
   padding: 0 0 0 7px;
@@ -366,7 +371,8 @@ body {
 .settings {
   position: absolute;
   top: 7px;
-  right: 7px; }
+  right: 7px;
+  display: none; }
 
 .todo-button {
   width: 16px;
@@ -379,7 +385,7 @@ body {
   background: url("../img/pencil.png"); }
   .pencil .edit-state {
     margin-right: 0; }
-  .pencil.confirm {
+  .pencil.doEdit {
     margin-right: 0; }
 
 .bin {
