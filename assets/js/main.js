@@ -7,6 +7,6 @@ var Main = (function () {
     }
     return Main;
 })();
-var app = (new Main()).app;
-app.log('Application loaded');
+var app;
+app = (new Main()).app;
 //# sourceMappingURL=main.js.map

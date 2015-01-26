@@ -8,5 +8,5 @@ class Main {
         this.app = new App(input,output);
     }
 }
-var app = (new Main()).app;
-app.log('Application loaded');
+var app;
+app = (new Main()).app;
